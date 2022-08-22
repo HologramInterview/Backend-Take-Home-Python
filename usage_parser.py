@@ -1,8 +1,11 @@
 import typing
-# TODO: add pydocs and more comments
 class UsageParser(object):
     @staticmethod
     def parse(*input: str) -> typing.List[typing.Mapping[str, typing.Any]]:
+        '''
+        Main method that takes in a list of usage strings and returns parsed usage objects.
+        '''
+
         return_list = []
         parsed_str = None
         for input_str in input:
@@ -28,10 +31,12 @@ class UsageParser(object):
 
     @staticmethod
     def convert_to_obj(id: str, mnc: str = None, bytes_used: str = None, dmcc: str = None, cellid: str = None, ip: str = None):
+        '''
+        Method takes in all of the inividual fields of the object and casts them and assembles the complete object.
+        '''
         
         def convert_field__not_null(val, convert_func):
             if val:
-                print(f'{val} via {convert_func}')
                 return convert_func(val)
 
         return_obj = {
@@ -46,6 +51,9 @@ class UsageParser(object):
 
     @staticmethod
     def convert_hex(hex_str: str):
+        '''
+        Converts the hex string into object fields.
+        '''
         ip = f'{int(hex_str[16:18], base=16)}.{int(hex_str[18:20], base=16)}.{int(hex_str[20:22], base=16)}.{int(hex_str[22:24], base=16)}'
         return_obj = {
             'mnc': int(hex_str[0:4], base=16),
@@ -57,6 +65,9 @@ class UsageParser(object):
     
     @staticmethod
     def parse_extended(input_list: typing.List[str], id: str):
+        '''
+        Parses extended input string into object.
+        '''
         dmcc = input_list[1]
         mnc = input_list[2]
         bytes_used = input_list[3]
@@ -66,11 +77,17 @@ class UsageParser(object):
 
     @staticmethod
     def parse_basic(input_list: typing.List[str], id: str):
+        '''
+        Parses basic input string into object
+        '''
         bytes_used = input_list[1]
         return UsageParser.convert_to_obj(id=id, bytes_used=bytes_used)
 
     @staticmethod
     def parse_hex(input_list: typing.List[str], id: str):
+        '''
+        Parses hex into string into object
+        '''
         hex_str = input_list[1]
         converted_hex = UsageParser.convert_hex(hex_str)
         return UsageParser.convert_to_obj(id=id,
@@ -81,6 +98,9 @@ class UsageParser(object):
 
     @staticmethod
     def parse_input(input_str: str):
+        '''
+        Parses input string into its comma delimited components. Also does error handlding for improperly formatted innput strings. 
+        '''
         if input_str:
             split_list = input_str.split(',')
             # Input needs to have at least 2 components
