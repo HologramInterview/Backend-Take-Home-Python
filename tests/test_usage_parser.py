@@ -130,3 +130,21 @@ class TestStringArray(unittest.TestCase):
             UsageParser.parse(*self.input),
             self.expected
         )
+
+class TestFailureUsage(unittest.TestCase):
+    '''UsageParser.parse: Given an invalid input handle the scenario correctly'''
+
+    input: str
+    expected: typing.List[typing.Mapping[str, typing.Any]]
+
+    def setUp(self):
+        self.input = '7291293451'
+        self.expected = []
+
+
+    def test_return_basic_string_data(self):
+        '''Then it will return basic string data'''
+        self.assertListEqual(
+            UsageParser.parse(self.input),
+            self.expected
+        )
